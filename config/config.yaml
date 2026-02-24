@@ -1,0 +1,129 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# SBMA RNAseq Generalized Pipeline — Configuration
+# ══════════════════════════════════════════════════════════════════════════════
+
+# ── Global settings ──
+species: "human"
+orgdb: "org.Hs.eg.db"
+kegg_organism: "hsa"
+reactome_organism: "human"
+
+thresholds:
+  lfc: 1.0
+  padj: 0.05
+
+enrichment:
+  pvalue_cutoff: 0.05
+  qvalue_cutoff: 0.05
+  min_gs_size: 15
+  max_gs_size: 500
+  simplify_cutoff: 0.7
+  n_perm: 10000
+  seed: 42
+
+databases:
+  - GO_BP
+  - GO_CC
+  - GO_MF
+  - KEGG
+  - Reactome
+  - Hallmarks
+  - WikiPathways
+
+colors:
+  up: "#bb0c00"
+  down: "#00AFBB"
+  ns: "grey60"
+  heatmap_low: "#2166AC"
+  heatmap_mid: "white"
+  heatmap_high: "#B2182B"
+
+plots:
+  dpi: 300
+  base_size: 14
+  format:
+    - "pdf"
+    - "png"
+
+# ── Datasets ──
+datasets:
+  SBMA_iPSC_Q51:
+    tissue_type: "iPSC"
+    contrasts:
+      disease_vs_control_vehicle:
+        label: "SBMA vs Healthy (Vehicle)"
+        deg_file: "data/SBMA_iPSC_Q51/etoh_all.csv"
+        full_ranked: true
+        androgen_treatment: false
+        columns:
+          gene_symbol: "gene_symbol"
+          log2fc: "log2fc"
+          pvalue: "pvalue"
+          padj: "padj"
+      disease_vs_control_testosterone:
+        label: "SBMA vs Healthy (Testosterone)"
+        deg_file: "data/SBMA_iPSC_Q51/testosterone_filtered.csv"
+        full_ranked: false
+        androgen_treatment: true
+        columns:
+          gene_symbol: "gene_symbol"
+          log2fc: "log2fc"
+          pvalue: "pvalue"
+          padj: "padj"
+
+  SBMA_MotorNeuron_Cohort1:
+    tissue_type: "motor_neuron"
+    contrasts:
+      disease_vs_control:
+        label: "SBMA vs Control Motor Neurons"
+        deg_file: "data/SBMA_MotorNeuron_Cohort1/deg_results.csv"
+        full_ranked: true
+        androgen_treatment: false
+        columns:
+          gene_symbol: "Symbol"
+          log2fc: "logFC"
+          pvalue: "PValue"
+          padj: "FDR"
+
+  SBMA_Muscle_Mouse:
+    tissue_type: "skeletal_muscle"
+    contrasts:
+      disease_vs_control_vehicle:
+        label: "AR113Q vs WT (Vehicle)"
+        deg_file: "data/SBMA_Muscle_Mouse/vehicle_deg.csv"
+        full_ranked: true
+        androgen_treatment: false
+        columns:
+          gene_symbol: "gene_name"
+          log2fc: "log2FoldChange"
+          pvalue: "pvalue"
+          padj: "padj"
+      disease_vs_control_dht:
+        label: "AR113Q vs WT (DHT)"
+        deg_file: "data/SBMA_Muscle_Mouse/dht_deg.csv"
+        full_ranked: true
+        androgen_treatment: true
+        columns:
+          gene_symbol: "gene_name"
+          log2fc: "log2FoldChange"
+          pvalue: "pvalue"
+          padj: "padj"
+
+# ── Cross-comparisons ──
+cross_comparisons:
+  within_dataset:
+    - dataset: "SBMA_iPSC_Q51"
+      contrasts:
+        - "disease_vs_control_vehicle"
+        - "disease_vs_control_testosterone"
+    - dataset: "SBMA_Muscle_Mouse"
+      contrasts:
+        - "disease_vs_control_vehicle"
+        - "disease_vs_control_dht"
+  across_datasets:
+    - name: "iPSC_vs_MotorNeuron"
+      pairs:
+        - dataset: "SBMA_iPSC_Q51"
+          contrast: "disease_vs_control_vehicle"
+        - dataset: "SBMA_MotorNeuron_Cohort1"
+          contrast: "disease_vs_control"

@@ -1,0 +1,215 @@
+# ══════════════════════════════════════════════════════════════════════════════
+# SBMA RNAseq Generalized Pipeline — Snakemake Workflow
+# ══════════════════════════════════════════════════════════════════════════════
+
+configfile: "config/config.yaml"
+
+# ── Build list of all (dataset, contrast) pairs ──
+PAIRS = []
+for ds, ds_cfg in config["datasets"].items():
+    for ct in ds_cfg["contrasts"]:
+        PAIRS.append((ds, ct))
+
+DS_LIST = [p[0] for p in PAIRS]
+CT_LIST = [p[1] for p in PAIRS]
+
+
+def get_deg_file(wildcards):
+    """Get the DEG input file for a dataset/contrast pair."""
+    return config["datasets"][wildcards.ds]["contrasts"][wildcards.ct]["deg_file"]
+
+
+def get_full_ranked(wildcards):
+    """Check if contrast has full ranked list."""
+    return config["datasets"][wildcards.ds]["contrasts"][wildcards.ct]["full_ranked"]
+
+
+# ── Target rule ──
+rule all:
+    input:
+        expand("results/{ds}/{ct}/reports/analysis_summary.txt",
+               zip, ds=DS_LIST, ct=CT_LIST),
+        "results/cross_comparison/done.flag"
+
+
+# ── Step 01: Data Preparation ──
+rule data_prep:
+    input:
+        deg=get_deg_file
+    output:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds",
+        deg_splits="results/{ds}/{ct}/data/deg_splits.rds",
+        contrast_info="results/{ds}/{ct}/data/contrast_info.rds"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/01_setup_and_data_prep.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 02: QC and Volcano Plots ──
+rule qc_volcano:
+    input:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        volcano="results/{ds}/{ct}/plots/volcano/volcano.pdf"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/02_deg_qc_and_volcano.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 03: ORA (All Databases) ──
+rule ora:
+    input:
+        deg_splits="results/{ds}/{ct}/data/deg_splits.rds",
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        flag="results/{ds}/{ct}/tables/ora_done.flag"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/03_ora_all.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 04: GSEA (All Databases, guarded by full_ranked) ──
+rule gsea:
+    input:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds",
+        contrast_info="results/{ds}/{ct}/data/contrast_info.rds"
+    output:
+        flag="results/{ds}/{ct}/tables/gsea_done.flag"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/04_gsea_all.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 05: TF, PPI, Disease, HPO Enrichment ──
+rule tf_ppi_disease:
+    input:
+        deg_splits="results/{ds}/{ct}/data/deg_splits.rds",
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        flag="results/{ds}/{ct}/tables/tf_done.flag"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/05_tf_ppi_disease_hpo.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 06: Purinergic Module ──
+rule purinergic:
+    input:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        summary="results/{ds}/{ct}/tables/purinergic_gene_summary.csv"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/06_purinergic_module.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 07: Mitochondrial Module ──
+rule mitochondrial:
+    input:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        summary="results/{ds}/{ct}/tables/mitochondrial_gene_summary.csv"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/07_mitochondrial_module.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 08: Purinergic-Mitochondrial Crosstalk ──
+rule crosstalk:
+    input:
+        puri="results/{ds}/{ct}/tables/purinergic_gene_summary.csv",
+        mito="results/{ds}/{ct}/tables/mitochondrial_gene_summary.csv",
+        deg_all="results/{ds}/{ct}/data/deg_all.rds"
+    output:
+        crosstalk="results/{ds}/{ct}/tables/mito_purinergic_crosstalk_genes.csv"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/08_puri_mito_crosstalk.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 09: Integration Figures and Report ──
+rule integration:
+    input:
+        deg_all="results/{ds}/{ct}/data/deg_all.rds",
+        puri="results/{ds}/{ct}/tables/purinergic_gene_summary.csv",
+        mito="results/{ds}/{ct}/tables/mitochondrial_gene_summary.csv",
+        crosstalk="results/{ds}/{ct}/tables/mito_purinergic_crosstalk_genes.csv",
+        ora_flag="results/{ds}/{ct}/tables/ora_done.flag",
+        gsea_flag="results/{ds}/{ct}/tables/gsea_done.flag",
+        tf_flag="results/{ds}/{ct}/tables/tf_done.flag",
+        volcano="results/{ds}/{ct}/plots/volcano/volcano.pdf"
+    output:
+        report="results/{ds}/{ct}/reports/analysis_summary.txt"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/09_integration_figures.R \
+            --config {params.config} \
+            --dataset {wildcards.ds} \
+            --contrast {wildcards.ct}
+        """
+
+
+# ── Step 10: Cross-Dataset and Cross-Contrast Comparisons ──
+rule cross_comparison:
+    input:
+        reports=expand("results/{ds}/{ct}/reports/analysis_summary.txt",
+                       zip, ds=DS_LIST, ct=CT_LIST)
+    output:
+        flag="results/cross_comparison/done.flag"
+    params:
+        config="config/config.yaml"
+    shell:
+        """
+        Rscript scripts/10_cross_comparison.R \
+            --config {params.config}
+        """

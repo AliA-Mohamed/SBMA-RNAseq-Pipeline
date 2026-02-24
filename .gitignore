@@ -1,0 +1,31 @@
+# Data (user-specific, not tracked)
+data/
+
+# Results (generated output)
+results/
+
+# R environment
+.Rhistory
+.RData
+.Rprofile
+.Rproj.user/
+renv/
+renv.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+*.swp
+*~
+*.bak
+.vscode/
+.idea/
+
+# Large files
+*.gmt
+*.gmt.RDS
+
+# Logs
+*.log
