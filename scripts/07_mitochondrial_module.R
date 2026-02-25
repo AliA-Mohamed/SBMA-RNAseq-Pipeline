@@ -206,7 +206,7 @@ complex_plot_df <- complex_stats %>%
     condition = contrast_cfg$label,
     pval      = ttest_p
   ) %>%
-  select(complex, condition, mean_lfc, sem, pval)
+  dplyr::select(complex, condition, mean_lfc, sem, pval)
 
 colors <- default_plot_colors()
 
@@ -401,8 +401,8 @@ message("\n--- Custom ORA Per Complex ---")
 # Step 22: Build TERM2GENE from complex -> gene_symbol
 oxphos_t2g <- mito_genes %>%
   filter(!is.na(complex)) %>%
-  select(complex, gene_symbol) %>%
-  rename(term = complex)
+  dplyr::select(complex, gene_symbol) %>%
+  dplyr::rename(term = complex)
 
 # Significant DEG symbols (from full DEG set, not just mito)
 sig_genes <- deg_all %>%

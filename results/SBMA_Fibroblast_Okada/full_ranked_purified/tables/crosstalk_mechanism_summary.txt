@@ -1,0 +1,11 @@
+In SBMA vs Control (Purified/P4, Full Ranked):
+- ATP production: 0 of 3 genes significant (0 up, 0 down). Mean LFC = -0.02.
+- ATP release: 1 of 4 genes significant (1 up, 0 down). Mean LFC = 0.31.
+- ATP/ADP transport: 0 of 6 genes significant (0 up, 0 down). Mean LFC = 0.07.
+- Extracellular ATP metabolism: 0 of 3 genes significant (0 up, 0 down). Mean LFC = -0.36.
+- Inflammasome/downstream: 0 of 4 genes significant (0 up, 0 down). Mean LFC = -0.00.
+- Mito ROS defense: 0 of 3 genes significant (0 up, 0 down). Mean LFC = -0.25.
+- Purinergic receptors: 0 of 5 genes significant (0 up, 0 down). Mean LFC = -0.01.
+
+Mechanistic interpretation:
+Elevated ATP release channels suggest increased extracellular ATP signaling.

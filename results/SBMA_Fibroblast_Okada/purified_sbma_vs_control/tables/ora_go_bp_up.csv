@@ -1,0 +1,2 @@
+"ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"GO:0002250","adaptive immune response","10/61","18/473",0.555555555555556,4.30783242258652,5.49998319802374,1.20492711402599e-05,0.00554266472451957,0.00537777996154759,"HLX/TRAV18/CLEC4C/FGL1/CD8B/CLEC7A/TRAV19/STAT4/HLA-DPA1/KLHL6",10

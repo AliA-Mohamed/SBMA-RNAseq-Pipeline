@@ -1,0 +1,4 @@
+gene_symbol,puri_category,mito_category,log2fc,padj,sig,direction
+VDAC1,atp_release,mito_apoptosis,-0.00645032389913385,0.9092546839580772,FALSE,NS
+VDAC2,atp_release,mito_apoptosis,0.06687657829382467,0.5147697498800508,FALSE,NS
+VDAC3,atp_release,mito_apoptosis,0.23377445832958416,0.3721820974085407,FALSE,NS

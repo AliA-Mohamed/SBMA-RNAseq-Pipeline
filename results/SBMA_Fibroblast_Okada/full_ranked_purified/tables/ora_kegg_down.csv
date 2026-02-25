@@ -1,0 +1,2 @@
+"category","subcategory","ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"Environmental Information Processing","Signal transduction","hsa04392","Hippo signaling pathway - multiple species","2/16","29/8625",0.0689655172413793,37.176724137931,8.41236378525513,0.00127226846579543,0.0496184701660216,0.0482122787038267,"9770/23286",2

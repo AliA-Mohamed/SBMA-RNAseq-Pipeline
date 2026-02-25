@@ -1,0 +1,8 @@
+category,n_genes,n_measured,n_sig,n_up,n_down,mean_lfc
+P1_receptors,4,0,0,0,0,NA
+P2X_receptors,7,0,0,0,0,NA
+P2Y_receptors,10,0,0,0,0,NA
+adenosine_metabolism,12,0,0,0,0,NA
+atp_release,13,0,0,0,0,NA
+downstream,12,1,0,0,0,-0.490200099301539
+ectonucleotidases,21,0,0,0,0,NA

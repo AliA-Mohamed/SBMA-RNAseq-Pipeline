@@ -1,0 +1,8 @@
+function_group,n_genes,n_sig,n_up,n_down,mean_lfc,genes_sig
+ATP production,3,0,0,0,0.021298229685354813,NA
+ATP release,4,0,0,0,-0.009555484924237037,NA
+ATP/ADP transport,6,0,0,0,0.03709100296587387,NA
+Extracellular ATP metabolism,3,0,0,0,-0.20690305412808854,NA
+Inflammasome/downstream,4,0,0,0,-0.14654302572681954,NA
+Mito ROS defense,3,0,0,0,-0.16599930921209963,NA
+Purinergic receptors,5,0,0,0,0.06330114659876754,NA

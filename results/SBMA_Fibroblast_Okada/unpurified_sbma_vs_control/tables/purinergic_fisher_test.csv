@@ -1,0 +1,5 @@
+group,count,odds_ratio,p_value,conf_int_low,conf_int_high,alternative
+Purinergic_DE,0,0,1,0,68.3280420307363,two.sided
+Purinergic_notDE,1,0,1,0,68.3280420307363,two.sided
+NonPurinergic_DE,325,0,1,0,68.3280420307363,two.sided
+NonPurinergic_notDE,569,0,1,0,68.3280420307363,two.sided

@@ -1,0 +1,2 @@
+"category","subcategory","ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"Organismal Systems","Immune system","hsa04650","Natural killer cell mediated cytotoxicity","2/4","127/8625",0.015748031496063,33.9566929133858,8.05921365675762,0.00126598200705008,0.00506392802820032,0.00266522527800017,"100507436/80328",2

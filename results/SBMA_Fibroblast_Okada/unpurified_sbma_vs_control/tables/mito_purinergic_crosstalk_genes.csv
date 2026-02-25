@@ -1,0 +1,29 @@
+gene_symbol,function_group,log2fc,pvalue,padj,sig,direction
+ATP5F1A,ATP production,NA,NA,NA,FALSE,NA
+ATP5F1B,ATP production,NA,NA,NA,FALSE,NA
+ATP5F1C,ATP production,NA,NA,NA,FALSE,NA
+SLC25A4,ATP/ADP transport,NA,NA,NA,FALSE,NA
+SLC25A5,ATP/ADP transport,NA,NA,NA,FALSE,NA
+SLC25A6,ATP/ADP transport,NA,NA,NA,FALSE,NA
+VDAC1,ATP/ADP transport,NA,NA,NA,FALSE,NA
+VDAC2,ATP/ADP transport,NA,NA,NA,FALSE,NA
+VDAC3,ATP/ADP transport,NA,NA,NA,FALSE,NA
+PANX1,ATP release,NA,NA,NA,FALSE,NA
+PANX2,ATP release,NA,NA,NA,FALSE,NA
+SLC17A9,ATP release,NA,NA,NA,FALSE,NA
+CALHM1,ATP release,NA,NA,NA,FALSE,NA
+ENTPD1,Extracellular ATP metabolism,NA,NA,NA,FALSE,NA
+NT5E,Extracellular ATP metabolism,NA,NA,NA,FALSE,NA
+ADA,Extracellular ATP metabolism,NA,NA,NA,FALSE,NA
+P2RX4,Purinergic receptors,NA,NA,NA,FALSE,NA
+P2RX7,Purinergic receptors,NA,NA,NA,FALSE,NA
+P2RY2,Purinergic receptors,NA,NA,NA,FALSE,NA
+ADORA1,Purinergic receptors,NA,NA,NA,FALSE,NA
+ADORA2A,Purinergic receptors,NA,NA,NA,FALSE,NA
+NLRP3,Inflammasome/downstream,NA,NA,NA,FALSE,NA
+CASP1,Inflammasome/downstream,NA,NA,NA,FALSE,NA
+IL1B,Inflammasome/downstream,NA,NA,NA,FALSE,NA
+TXNIP,Inflammasome/downstream,NA,NA,NA,FALSE,NA
+SOD2,Mito ROS defense,NA,NA,NA,FALSE,NA
+GPX1,Mito ROS defense,NA,NA,NA,FALSE,NA
+CAT,Mito ROS defense,NA,NA,NA,FALSE,NA

@@ -1,0 +1,73 @@
+==============================================================================
+ANALYSIS SUMMARY REPORT
+Generated: 2026-02-25 16:05:38
+==============================================================================
+
+--- Dataset and Contrast ---
+  Dataset:     SBMA_Fibroblast_Okada
+  Contrast:    SBMA vs Control (Unpurified/NT, Full Ranked)
+  Tissue:      fibroblast
+  Species:     human
+
+--- Thresholds ---
+  LFC threshold:  1
+  padj threshold: 0.05
+
+--- Differential Expression Summary ---
+  Total genes tested: 37691
+  Upregulated:        31
+  Downregulated:      13
+  Not significant:    37647
+
+--- Top Enriched Pathways ---
+
+  GO Biological Process (UP):
+  (no significant terms)
+
+  GO Biological Process (DOWN):
+  - antigen processing and presentation of endogenous peptide antigen via MHC class I via ER pathway, TAP-independent (padj=1.02e-03)
+  - antigen processing and presentation of endogenous peptide antigen via MHC class Ib (padj=1.02e-03)
+  - positive regulation of T cell mediated cytotoxicity (padj=2.17e-03)
+  - T cell mediated cytotoxicity (padj=3.76e-03)
+  - positive regulation of leukocyte mediated cytotoxicity (padj=4.67e-03)
+
+  KEGG (UP):
+  - Neuroactive ligand-receptor interaction (padj=4.93e-03)
+
+  KEGG (DOWN):
+  - Natural killer cell mediated cytotoxicity (padj=5.06e-03)
+
+  Hallmark (UP):
+  (no significant terms)
+
+  Hallmark (DOWN):
+  - HALLMARK_ADIPOGENESIS (padj=4.56e-02)
+  - HALLMARK_KRAS_SIGNALING_UP (padj=4.56e-02)
+
+--- Purinergic Signaling Summary ---
+  Defined purinergic genes:   79
+  Measured in this dataset:   78
+  Significantly dysregulated: 0
+
+--- Mitochondrial Function Summary ---
+  Defined mitochondrial genes: 216
+  Measured in this dataset:    203
+  Significantly dysregulated:  0
+
+--- OXPHOS Complex Summary ---
+  - Complex I: 0 sig of 38 genes, mean LFC=0.060 (SIGNIFICANT shift)
+  - Complex II: 0 sig of  6 genes, mean LFC=-0.013 (no significant shift)
+  - Complex III: 0 sig of 11 genes, mean LFC=0.046 (no significant shift)
+  - Complex IV: 0 sig of 27 genes, mean LFC=0.024 (no significant shift)
+  - Complex V: 0 sig of 16 genes, mean LFC=0.074 (SIGNIFICANT shift)
+
+--- Crosstalk Summary ---
+  Defined crosstalk genes:    28
+  Measured in this dataset:   28
+  Significantly dysregulated: 0
+
+--- Key Findings ---
+  * Strong upregulation bias: 31 up vs 13 down genes.
+  * OXPHOS complexes with significant mean LFC shift: Complex I, Complex V.
+
+==============================================================================

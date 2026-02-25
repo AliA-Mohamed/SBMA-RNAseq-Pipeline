@@ -1,0 +1,9 @@
+GSEA SKIPPED for SBMA_Fibroblast_Okada/unpurified_sbma_vs_control
+
+Reason: contrast_cfg$full_ranked is FALSE.
+GSEA requires a full ranked gene list (all genes with log2FC and p-values),
+not a pre-filtered subset. This contrast provides only filtered DEGs.
+
+To enable GSEA for this contrast, set 'full_ranked: true' in config.yaml
+and ensure the DEG file contains the complete unfiltered results table.
+

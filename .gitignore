@@ -1,8 +1,13 @@
-# Data (user-specific, not tracked)
-data/
+# Data — ignore by default, allow project-specific data
+data/*
+!data/SBMA_Fibroblast_Okada/
 
-# Results (generated output)
-results/
+# Results — track text reports/CSVs, ignore large binary outputs
+results/**/*.pdf
+results/**/*.png
+results/**/*.rds
+results/**/*.RDS
+results/**/*.xlsx
 
 # R environment
 .Rhistory

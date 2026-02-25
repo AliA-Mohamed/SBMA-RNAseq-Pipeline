@@ -1,0 +1,3 @@
+"ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"small_cell_lung_cancer","small_cell_lung_cancer","1/1","55/3177",0.0181818181818182,57.7636363636364,7.53416460953943,0.0173119294932326,0.0346238589864651,NA,"COL22A1",1
+"squamous_head_and_neck_cancer","squamous_head_and_neck_cancer","1/1","122/3177",0.00819672131147541,26.0409836065574,5.00409668237509,0.0384010072395342,0.0384010072395342,NA,"COL22A1",1

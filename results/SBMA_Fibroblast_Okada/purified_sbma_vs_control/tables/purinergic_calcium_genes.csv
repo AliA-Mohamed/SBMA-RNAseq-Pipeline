@@ -1,0 +1,3 @@
+gene_symbol,log2fc,pvalue,padj,diffexpressed,calcium_category,sig,direction
+MCUR1,-0.23870575386916223,0.022141412,0.022141412,NS,calcium_transport,FALSE,NS
+CACNA1S,-1.5262120246094475,0.03447389,0.03447389,Downregulated,calcium_channels,TRUE,Down

@@ -1,0 +1,67 @@
+==============================================================================
+ANALYSIS SUMMARY REPORT
+Generated: 2026-02-25 16:12:10
+==============================================================================
+
+--- Dataset and Contrast ---
+  Dataset:     SBMA_Fibroblast_Okada
+  Contrast:    SBMA vs Control (Purified/P4, Full Ranked)
+  Tissue:      fibroblast
+  Species:     human
+
+--- Thresholds ---
+  LFC threshold:  1
+  padj threshold: 0.05
+
+--- Differential Expression Summary ---
+  Total genes tested: 37691
+  Upregulated:        31
+  Downregulated:      33
+  Not significant:    37627
+
+--- Top Enriched Pathways ---
+
+  GO Biological Process (UP):
+  (no significant terms)
+
+  GO Biological Process (DOWN):
+  (no significant terms)
+
+  KEGG (UP):
+  (no significant terms)
+
+  KEGG (DOWN):
+  - Hippo signaling pathway - multiple species (padj=4.96e-02)
+
+  Hallmark (UP):
+  (no significant terms)
+
+  Hallmark (DOWN):
+  (no significant terms)
+
+--- Purinergic Signaling Summary ---
+  Defined purinergic genes:   79
+  Measured in this dataset:   78
+  Significantly dysregulated: 0
+
+--- Mitochondrial Function Summary ---
+  Defined mitochondrial genes: 216
+  Measured in this dataset:    203
+  Significantly dysregulated:  0
+
+--- OXPHOS Complex Summary ---
+  - Complex I: 0 sig of 38 genes, mean LFC=0.047 (SIGNIFICANT shift)
+  - Complex II: 0 sig of  6 genes, mean LFC=0.030 (no significant shift)
+  - Complex III: 0 sig of 11 genes, mean LFC=0.007 (no significant shift)
+  - Complex IV: 0 sig of 27 genes, mean LFC=0.076 (SIGNIFICANT shift)
+  - Complex V: 0 sig of 16 genes, mean LFC=0.051 (no significant shift)
+
+--- Crosstalk Summary ---
+  Defined crosstalk genes:    28
+  Measured in this dataset:   28
+  Significantly dysregulated: 0
+
+--- Key Findings ---
+  * OXPHOS complexes with significant mean LFC shift: Complex I, Complex IV.
+
+==============================================================================

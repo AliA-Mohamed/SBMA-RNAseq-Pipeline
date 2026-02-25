@@ -1,0 +1,4 @@
+gene_symbol,puri_category,mito_category,log2fc,padj,sig,direction
+VDAC1,atp_release,mito_apoptosis,NA,NA,NA,NS
+VDAC2,atp_release,mito_apoptosis,NA,NA,NA,NS
+VDAC3,atp_release,mito_apoptosis,NA,NA,NA,NS

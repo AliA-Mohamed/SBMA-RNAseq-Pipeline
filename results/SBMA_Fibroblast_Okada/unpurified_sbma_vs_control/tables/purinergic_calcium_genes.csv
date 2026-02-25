@@ -1,0 +1,5 @@
+gene_symbol,log2fc,pvalue,padj,diffexpressed,calcium_category,sig,direction
+CAMK1G,0.7329823819408726,0.009162641,0.009162641,NS,calcium_binding,FALSE,NS
+MCUB,-0.36776118413266223,0.020533384,0.020533384,NS,calcium_transport,FALSE,NS
+CALML3-AS1,-2.1568766863714037,0.027834576,0.027834576,Downregulated,calcium_binding,TRUE,Down
+CACNA1I,0.6357448785122426,0.031490672,0.031490672,NS,calcium_channels,FALSE,NS

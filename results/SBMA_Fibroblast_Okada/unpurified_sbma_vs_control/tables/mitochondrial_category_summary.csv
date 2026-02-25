@@ -1,0 +1,14 @@
+"category","n_genes","n_measured","n_sig","n_up","n_down","mean_lfc","median_lfc"
+"mitophagy",14,1,0,0,0,-0.296291004809274,-0.296291004809274
+"complex_III",12,1,0,0,0,0.246633013384679,0.246633013384679
+"complex_I",45,1,0,0,0,0.215716116751187,0.215716116751187
+"complex_IV",30,2,0,0,0,-0.00648797513431459,-0.00648797513431459
+"complex_II",6,0,0,0,0,NA,NA
+"complex_V",18,0,0,0,0,NA,NA
+"fission",5,0,0,0,0,NA,NA
+"fusion",4,0,0,0,0,NA,NA
+"mito_apoptosis",16,0,0,0,0,NA,NA
+"mito_transport",13,0,0,0,0,NA,NA
+"mtdna_maintenance",13,0,0,0,0,NA,NA
+"ros_defense",19,0,0,0,0,NA,NA
+"tca_cycle",21,0,0,0,0,NA,NA

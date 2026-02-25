@@ -1,0 +1,3 @@
+gene_symbol,log2fc,pvalue,padj,diffexpressed,sig,direction,sig_label
+NFKB1,-0.6599751436686598,0.023937675,0.023937675,NS,FALSE,NS,*
+PANX1,0.4148815842111513,0.048720626,0.048720626,NS,FALSE,NS,*

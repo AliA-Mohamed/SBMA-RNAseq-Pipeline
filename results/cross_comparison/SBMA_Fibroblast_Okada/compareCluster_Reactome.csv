@@ -1,0 +1,2 @@
+"Cluster","ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"UP_full_ranked_unpurified","R-HSA-418555","G alpha (s) signalling events","3/13","158/11146",0.0189873417721519,16.2794547224927,6.60971421105984,0.000720099040913602,0.0302441597183713,0.0227399697130611,"CALCA/CALCB/GPR83",3

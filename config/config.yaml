@@ -1,5 +1,6 @@
 # ══════════════════════════════════════════════════════════════════════════════
 # SBMA RNAseq Generalized Pipeline — Configuration
+# Configured for GSE142612 (Okada et al.) SBMA Fibroblast Dataset
 # ══════════════════════════════════════════════════════════════════════════════
 
 # ── Global settings ──
@@ -47,83 +48,58 @@ plots:
 
 # ── Datasets ──
 datasets:
-  SBMA_iPSC_Q51:
-    tissue_type: "iPSC"
+  SBMA_Fibroblast_Okada:
+    tissue_type: "fibroblast"
     contrasts:
-      disease_vs_control_vehicle:
-        label: "SBMA vs Healthy (Vehicle)"
-        deg_file: "data/SBMA_iPSC_Q51/etoh_all.csv"
-        full_ranked: true
-        androgen_treatment: false
-        columns:
-          gene_symbol: "gene_symbol"
-          log2fc: "log2fc"
-          pvalue: "pvalue"
-          padj: "padj"
-      disease_vs_control_testosterone:
-        label: "SBMA vs Healthy (Testosterone)"
-        deg_file: "data/SBMA_iPSC_Q51/testosterone_filtered.csv"
+      purified_sbma_vs_control:
+        label: "SBMA vs Control (Purified)"
+        deg_file: "data/SBMA_Fibroblast_Okada/purified_degs.csv"
         full_ranked: false
-        androgen_treatment: true
+        androgen_treatment: false
         columns:
           gene_symbol: "gene_symbol"
           log2fc: "log2fc"
           pvalue: "pvalue"
           padj: "padj"
-
-  SBMA_MotorNeuron_Cohort1:
-    tissue_type: "motor_neuron"
-    contrasts:
-      disease_vs_control:
-        label: "SBMA vs Control Motor Neurons"
-        deg_file: "data/SBMA_MotorNeuron_Cohort1/deg_results.csv"
-        full_ranked: true
+      unpurified_sbma_vs_control:
+        label: "SBMA vs Control (Unpurified)"
+        deg_file: "data/SBMA_Fibroblast_Okada/unpurified_degs.csv"
+        full_ranked: false
         androgen_treatment: false
         columns:
-          gene_symbol: "Symbol"
-          log2fc: "logFC"
-          pvalue: "PValue"
-          padj: "FDR"
-
-  SBMA_Muscle_Mouse:
-    tissue_type: "skeletal_muscle"
-    contrasts:
-      disease_vs_control_vehicle:
-        label: "AR113Q vs WT (Vehicle)"
-        deg_file: "data/SBMA_Muscle_Mouse/vehicle_deg.csv"
-        full_ranked: true
-        androgen_treatment: false
-        columns:
-          gene_symbol: "gene_name"
-          log2fc: "log2FoldChange"
+          gene_symbol: "gene_symbol"
+          log2fc: "log2fc"
           pvalue: "pvalue"
           padj: "padj"
-      disease_vs_control_dht:
-        label: "AR113Q vs WT (DHT)"
-        deg_file: "data/SBMA_Muscle_Mouse/dht_deg.csv"
+      full_ranked_unpurified:
+        label: "SBMA vs Control (Unpurified/NT, Full Ranked)"
+        deg_file: "data/SBMA_Fibroblast_Okada/full_ranked_NT_degs.csv"
         full_ranked: true
-        androgen_treatment: true
+        androgen_treatment: false
         columns:
-          gene_symbol: "gene_name"
-          log2fc: "log2FoldChange"
+          gene_symbol: "gene_symbol"
+          log2fc: "log2fc"
+          pvalue: "pvalue"
+          padj: "padj"
+      full_ranked_purified:
+        label: "SBMA vs Control (Purified/P4, Full Ranked)"
+        deg_file: "data/SBMA_Fibroblast_Okada/full_ranked_P4_degs.csv"
+        full_ranked: true
+        androgen_treatment: false
+        columns:
+          gene_symbol: "gene_symbol"
+          log2fc: "log2fc"
           pvalue: "pvalue"
           padj: "padj"
 
 # ── Cross-comparisons ──
 cross_comparisons:
   within_dataset:
-    - dataset: "SBMA_iPSC_Q51"
+    - dataset: "SBMA_Fibroblast_Okada"
       contrasts:
-        - "disease_vs_control_vehicle"
-        - "disease_vs_control_testosterone"
-    - dataset: "SBMA_Muscle_Mouse"
+        - "purified_sbma_vs_control"
+        - "unpurified_sbma_vs_control"
+    - dataset: "SBMA_Fibroblast_Okada"
       contrasts:
-        - "disease_vs_control_vehicle"
-        - "disease_vs_control_dht"
-  across_datasets:
-    - name: "iPSC_vs_MotorNeuron"
-      pairs:
-        - dataset: "SBMA_iPSC_Q51"
-          contrast: "disease_vs_control_vehicle"
-        - dataset: "SBMA_MotorNeuron_Cohort1"
-          contrast: "disease_vs_control"
+        - "full_ranked_unpurified"
+        - "full_ranked_purified"

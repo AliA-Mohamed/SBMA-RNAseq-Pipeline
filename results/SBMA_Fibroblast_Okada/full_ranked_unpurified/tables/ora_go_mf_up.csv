@@ -1,0 +1,2 @@
+"ID","Description","GeneRatio","BgRatio","RichFactor","FoldEnrichment","zScore","pvalue","p.adjust","qvalue","geneID","Count"
+"GO:0015280","ligand-gated sodium channel activity","2/19","18/18535",0.111111111111111,108.391812865497,14.6019180500487,0.000150836466973268,0.0150836466973268,0.00889141279000317,"ASIC2/GRIK1",2

@@ -1,0 +1,63 @@
+==============================================================================
+ANALYSIS SUMMARY REPORT
+Generated: 2026-02-25 14:47:57
+==============================================================================
+
+--- Dataset and Contrast ---
+  Dataset:     SBMA_Fibroblast_Okada
+  Contrast:    SBMA vs Control (Purified)
+  Tissue:      fibroblast
+  Species:     human
+
+--- Thresholds ---
+  LFC threshold:  1
+  padj threshold: 0.05
+
+--- Differential Expression Summary ---
+  Total genes tested: 777
+  Upregulated:        211
+  Downregulated:      94
+  Not significant:    472
+
+--- Top Enriched Pathways ---
+
+  GO Biological Process (UP):
+  - adaptive immune response (padj=5.54e-03)
+
+  GO Biological Process (DOWN):
+  - sensory organ development (padj=4.34e-02)
+
+  KEGG (UP):
+  (no significant terms)
+
+  KEGG (DOWN):
+  (no significant terms)
+
+  Hallmark (UP):
+  (no significant terms)
+
+  Hallmark (DOWN):
+  (no significant terms)
+
+--- Purinergic Signaling Summary ---
+  Defined purinergic genes:   79
+  Measured in this dataset:   3
+  Significantly dysregulated: 0
+
+--- Mitochondrial Function Summary ---
+  Defined mitochondrial genes: 216
+  Measured in this dataset:    4
+  Significantly dysregulated:  0
+
+--- OXPHOS Complex Summary ---
+  - Complex IV: 0 sig of 1 genes, mean LFC=0.325 (no significant shift)
+
+--- Crosstalk Summary ---
+  Defined crosstalk genes:    28
+  Measured in this dataset:   1
+  Significantly dysregulated: 0
+
+--- Key Findings ---
+  * Strong upregulation bias: 211 up vs 94 down genes.
+
+==============================================================================

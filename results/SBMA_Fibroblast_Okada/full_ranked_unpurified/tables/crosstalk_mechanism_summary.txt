@@ -1,0 +1,11 @@
+In SBMA vs Control (Unpurified/NT, Full Ranked):
+- ATP production: 0 of 3 genes significant (0 up, 0 down). Mean LFC = 0.02.
+- ATP release: 0 of 4 genes significant (0 up, 0 down). Mean LFC = -0.01.
+- ATP/ADP transport: 0 of 6 genes significant (0 up, 0 down). Mean LFC = 0.04.
+- Extracellular ATP metabolism: 0 of 3 genes significant (0 up, 0 down). Mean LFC = -0.21.
+- Inflammasome/downstream: 0 of 4 genes significant (0 up, 0 down). Mean LFC = -0.15.
+- Mito ROS defense: 0 of 3 genes significant (0 up, 0 down). Mean LFC = -0.17.
+- Purinergic receptors: 0 of 5 genes significant (0 up, 0 down). Mean LFC = 0.06.
+
+Mechanistic interpretation:
+No canonical crosstalk patterns detected at current significance thresholds.
