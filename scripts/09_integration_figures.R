@@ -200,18 +200,18 @@ cat("Building master supplementary table ...\n")
 
 # Start with the full DEG table
 master <- deg %>%
-  select(gene_symbol, log2fc, pvalue, padj, diffexpressed)
+  dplyr::select(gene_symbol, log2fc, pvalue, padj, diffexpressed)
 
 # --- Purinergic annotation ---
 puri_genes <- get_purinergic_genes()
 if (!is.null(puri_summary) && "category" %in% colnames(puri_summary)) {
   puri_annot <- puri_summary %>%
-    select(gene_symbol, purinergic_category = category) %>%
+    dplyr::select(gene_symbol, purinergic_category = category) %>%
     distinct(gene_symbol, .keep_all = TRUE) %>%
     mutate(is_purinergic = TRUE)
 } else {
   puri_annot <- puri_genes %>%
-    select(gene_symbol, purinergic_category = category) %>%
+    dplyr::select(gene_symbol, purinergic_category = category) %>%
     distinct(gene_symbol, .keep_all = TRUE) %>%
     mutate(is_purinergic = TRUE)
 }
@@ -224,12 +224,12 @@ master <- master %>%
 mito_genes <- get_mitochondrial_genes()
 if (!is.null(mito_summary) && all(c("category", "complex") %in% colnames(mito_summary))) {
   mito_annot <- mito_summary %>%
-    select(gene_symbol, mito_category = category, mito_complex = complex) %>%
+    dplyr::select(gene_symbol, mito_category = category, mito_complex = complex) %>%
     distinct(gene_symbol, .keep_all = TRUE) %>%
     mutate(is_mitochondrial = TRUE)
 } else {
   mito_annot <- mito_genes %>%
-    select(gene_symbol, mito_category = category, mito_complex = complex) %>%
+    dplyr::select(gene_symbol, mito_category = category, mito_complex = complex) %>%
     distinct(gene_symbol, .keep_all = TRUE) %>%
     mutate(is_mitochondrial = TRUE)
 }
@@ -259,13 +259,13 @@ if (!is.null(ora_hallmark_up) || !is.null(ora_hallmark_down)) {
     hallmark_gene_map <- hallmark_combined %>%
       arrange(p.adjust) %>%
       mutate(term_rank = row_number()) %>%
-      select(Description, geneID, term_rank) %>%
+      dplyr::select(Description, geneID, term_rank) %>%
       mutate(genes = strsplit(geneID, "/")) %>%
       unnest(genes) %>%
-      rename(gene_symbol = genes) %>%
+      dplyr::rename(gene_symbol = genes) %>%
       arrange(term_rank) %>%
       distinct(gene_symbol, .keep_all = TRUE) %>%
-      select(gene_symbol, top_hallmark = Description)
+      dplyr::select(gene_symbol, top_hallmark = Description)
 
     # Clean hallmark names: remove "HALLMARK_" prefix and replace underscores
     hallmark_gene_map <- hallmark_gene_map %>%
@@ -274,14 +274,14 @@ if (!is.null(ora_hallmark_up) || !is.null(ora_hallmark_down)) {
 
     # Merge into master
     master <- master %>%
-      select(-top_hallmark) %>%
+      dplyr::select(-top_hallmark) %>%
       left_join(hallmark_gene_map, by = "gene_symbol")
   }
 }
 
 # Reorder columns for clarity
 master <- master %>%
-  select(gene_symbol, log2fc, pvalue, padj, diffexpressed,
+  dplyr::select(gene_symbol, log2fc, pvalue, padj, diffexpressed,
          is_purinergic, purinergic_category,
          is_mitochondrial, mito_category, mito_complex,
          is_crosstalk, top_hallmark)
@@ -599,7 +599,7 @@ p_crosstalk <- tryCatch({
   ct_genes <- get_crosstalk_genes()
   ct_merged <- ct_genes %>%
     left_join(
-      deg %>% select(gene_symbol, log2fc, padj),
+      deg %>% dplyr::select(gene_symbol, log2fc, padj),
       by = "gene_symbol"
     ) %>%
     filter(!is.na(log2fc)) %>%
@@ -645,7 +645,7 @@ p_inflammasome <- tryCatch({
 
   inflamm_df <- deg %>%
     filter(gene_symbol %in% inflamm_genes) %>%
-    select(gene_symbol, log2fc, padj) %>%
+    dplyr::select(gene_symbol, log2fc, padj) %>%
     mutate(
       gene_symbol = factor(gene_symbol, levels = inflamm_genes),
       sig_label = case_when(
@@ -783,7 +783,7 @@ oxphos_lines <- if (nrow(oxphos_report) > 0) {
 
 # -- Crosstalk summary ---
 ct_for_report <- get_crosstalk_genes() %>%
-  left_join(deg %>% select(gene_symbol, log2fc, padj), by = "gene_symbol") %>%
+  left_join(deg %>% dplyr::select(gene_symbol, log2fc, padj), by = "gene_symbol") %>%
   mutate(sig = !is.na(padj) & padj < padj_thresh & abs(log2fc) > lfc_thresh)
 n_ct_total   <- nrow(get_crosstalk_genes())
 n_ct_measured <- sum(!is.na(ct_for_report$log2fc))

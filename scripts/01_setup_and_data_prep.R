@@ -97,6 +97,37 @@ cat(sprintf("       log2FC range          : [%.2f, %.2f]\n",
             min(deg_df$log2fc, na.rm = TRUE),
             max(deg_df$log2fc, na.rm = TRUE)))
 
+# ── 5b. Data provenance checks ──────────────────────────────────────────────
+cat("\n[5b/9] Data provenance checks...\n")
+
+# Check if padj == pvalue (no FDR correction applied)
+if (all(deg_df$padj == deg_df$pvalue, na.rm = TRUE)) {
+  cat("       WARNING: padj values are identical to raw p-values.\n")
+  cat("       No FDR correction was applied to this dataset.\n")
+  cat("       ORA results using padj thresholds may have inflated false\n")
+  cat("       discovery rates. GSEA (rank-based) is not affected.\n")
+}
+
+# Detect suspicious log2fc patterns
+has_negative_lfc <- any(deg_df$log2fc < 0, na.rm = TRUE)
+max_abs_lfc      <- max(abs(deg_df$log2fc), na.rm = TRUE)
+
+if (!has_negative_lfc && max_abs_lfc > 5) {
+  cat("       WARNING: log2fc values are all non-negative with large range.\n")
+  cat("       This may indicate raw fold changes (not log2-transformed).\n")
+}
+
+# Cross-check gene count vs full_ranked setting
+n_input_genes <- nrow(deg_df)
+if (n_input_genes < 1000 && isTRUE(contrast_cfg$full_ranked)) {
+  cat(sprintf("       WARNING: Only %d genes but full_ranked=TRUE.\n", n_input_genes))
+  cat("       A full ranked list typically contains >10,000 genes.\n")
+}
+if (n_input_genes > 5000 && !isTRUE(contrast_cfg$full_ranked)) {
+  cat(sprintf("       NOTE: %d genes with full_ranked=FALSE.\n", n_input_genes))
+  cat("       Consider setting full_ranked=TRUE to enable GSEA.\n")
+}
+
 # ── 6. Classify DEGs ─────────────────────────────────────────────────────────
 cat("\n[6/9] Classifying DEGs...\n")
 lfc_thresh  <- cfg$thresholds$lfc

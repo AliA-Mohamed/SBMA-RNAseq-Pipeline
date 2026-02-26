@@ -302,12 +302,12 @@ if (!is.null(within_comparisons) && length(within_comparisons) > 0) {
         )
 
         df1 <- deg_list[[ct1]] %>%
-          select(gene_symbol, log2fc, padj, diffexpressed) %>%
-          rename(lfc_1 = log2fc, padj_1 = padj, de_1 = diffexpressed)
+          dplyr::select(gene_symbol, log2fc, padj, diffexpressed) %>%
+          dplyr::rename(lfc_1 = log2fc, padj_1 = padj, de_1 = diffexpressed)
 
         df2 <- deg_list[[ct2]] %>%
-          select(gene_symbol, log2fc, padj, diffexpressed) %>%
-          rename(lfc_2 = log2fc, padj_2 = padj, de_2 = diffexpressed)
+          dplyr::select(gene_symbol, log2fc, padj, diffexpressed) %>%
+          dplyr::rename(lfc_2 = log2fc, padj_2 = padj, de_2 = diffexpressed)
 
         scatter_df <- inner_join(df1, df2, by = "gene_symbol")
 
@@ -666,7 +666,38 @@ if (!is.null(within_comparisons) && length(within_comparisons) > 0) {
           }
 
         } else {
-          cat("       Both contrasts have same androgen_treatment flag — skipping condition-specific analysis.\n")
+          cat("       Both contrasts have same androgen_treatment flag.\n")
+          cat("       Generating generic condition-specific gene lists instead.\n")
+
+          # Generic condition-specific analysis (not androgen-dependent)
+          sig_ct1 <- unique(c(sig_list[[ct1]]$up, sig_list[[ct1]]$down))
+          sig_ct2 <- unique(c(sig_list[[ct2]]$up, sig_list[[ct2]]$down))
+
+          shared_genes   <- intersect(sig_ct1, sig_ct2)
+          only_ct1_genes <- setdiff(sig_ct1, sig_ct2)
+          only_ct2_genes <- setdiff(sig_ct2, sig_ct1)
+
+          ct1_label <- tryCatch(get_contrast(cfg, dataset_id, ct1)$label,
+                                error = function(e) ct1)
+          ct2_label <- tryCatch(get_contrast(cfg, dataset_id, ct2)$label,
+                                error = function(e) ct2)
+
+          cat(sprintf("       Shared DEGs:         %d\n", length(shared_genes)))
+          cat(sprintf("       Unique to %s: %d\n", ct1, length(only_ct1_genes)))
+          cat(sprintf("       Unique to %s: %d\n", ct2, length(only_ct2_genes)))
+
+          if (length(shared_genes) > 0 || length(only_ct1_genes) > 0 || length(only_ct2_genes) > 0) {
+            gene_category_df <- bind_rows(
+              tibble(gene_symbol = shared_genes,   category = "Shared"),
+              tibble(gene_symbol = only_ct1_genes, category = paste0("Unique_", ct1)),
+              tibble(gene_symbol = only_ct2_genes, category = paste0("Unique_", ct2))
+            )
+            write.csv(gene_category_df,
+                      file.path(out_within, "condition_specific_gene_lists.csv"),
+                      row.names = FALSE)
+          } else {
+            cat("       No significant DEGs in either condition — no gene list written.\n")
+          }
         }
       }, error = function(e) {
         warning(sprintf("Condition-specific analysis failed for %s: %s",
@@ -843,7 +874,7 @@ if (!is.null(across_comparisons) && length(across_comparisons) > 0) {
 
         # Plot heatmap
         jaccard_long <- as.data.frame(as.table(jaccard_mat)) %>%
-          rename(Pair1 = Var1, Pair2 = Var2, Jaccard = Freq)
+          dplyr::rename(Pair1 = Var1, Pair2 = Var2, Jaccard = Freq)
 
         p_jaccard <- ggplot(jaccard_long, aes(x = Pair1, y = Pair2, fill = Jaccard)) +
           geom_tile(colour = "white", linewidth = 0.5) +
@@ -1030,9 +1061,9 @@ if (!is.null(across_comparisons) && length(across_comparisons) > 0) {
       mito_genes       <- get_mitochondrial_genes()
 
       curated_genes <- bind_rows(
-        purinergic_genes %>% select(gene_symbol, category) %>%
+        purinergic_genes %>% dplyr::select(gene_symbol, category) %>%
           mutate(gene_class = "Purinergic"),
-        mito_genes %>% select(gene_symbol, category) %>%
+        mito_genes %>% dplyr::select(gene_symbol, category) %>%
           mutate(gene_class = "Mitochondrial")
       ) %>%
         distinct(gene_symbol, .keep_all = TRUE)
@@ -1044,7 +1075,7 @@ if (!is.null(across_comparisons) && length(across_comparisons) > 0) {
         deg_df <- pair_degs[[pk]]
         merged <- curated_genes %>%
           left_join(
-            deg_df %>% select(gene_symbol, log2fc, padj),
+            deg_df %>% dplyr::select(gene_symbol, log2fc, padj),
             by = "gene_symbol"
           ) %>%
           mutate(
@@ -1057,14 +1088,14 @@ if (!is.null(across_comparisons) && length(across_comparisons) > 0) {
             pair = pk
           )
         direction_frames[[pk]] <- merged %>%
-          select(gene_symbol, category, gene_class, direction, pair)
+          dplyr::select(gene_symbol, category, gene_class, direction, pair)
       }
 
       dir_combined <- bind_rows(direction_frames)
 
       # Pivot to wide: genes x pairs
       dir_wide <- dir_combined %>%
-        select(gene_symbol, category, gene_class, pair, direction) %>%
+        dplyr::select(gene_symbol, category, gene_class, pair, direction) %>%
         pivot_wider(names_from = pair, values_from = direction, values_fill = 0)
 
       # Filter to genes that are significant in at least one pair

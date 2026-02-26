@@ -216,7 +216,7 @@ cat("[6/11] Running custom ORA on purinergic subcategories...\n")
 
 # Build TERM2GENE: category -> gene_symbol
 purinergic_t2g <- purinergic_genes %>%
-  select(term = category, gene = gene_symbol)
+  dplyr::select(term = category, gene = gene_symbol)
 
 # Significant DEGs from the full dataset
 if (!"diffexpressed" %in% colnames(deg)) {

@@ -326,7 +326,7 @@ tryCatch({
         Database = db,
         Term     = ifelse(is.na(Description) | Description == "", ID, Description)
       ) %>%
-      select(Database, Term, NES, p.adjust)
+      dplyr::select(Database, Term, NES, p.adjust)
 
     nes_frames[[db]] <- top_terms
   }

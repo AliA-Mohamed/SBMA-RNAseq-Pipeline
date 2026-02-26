@@ -244,7 +244,7 @@ make_heatmap <- function(gene_df,
   message("make_heatmap: pheatmap not available, using ggplot2 fallback.")
 
   plot_df <- gene_df %>%
-    select(all_of(c("gene_symbol", category_col, value_cols))) %>%
+    dplyr::select(all_of(c("gene_symbol", category_col, value_cols))) %>%
     pivot_longer(
       cols      = all_of(value_cols),
       names_to  = "condition",
@@ -307,7 +307,7 @@ make_forest_plot <- function(gene_df,
 
   # -- Pivot to long format ---------------------------------------------------
   plot_df <- gene_df %>%
-    select(all_of(c("gene_symbol", category_col, sig_col, value_cols))) %>%
+    dplyr::select(all_of(c("gene_symbol", category_col, sig_col, value_cols))) %>%
     pivot_longer(
       cols      = all_of(value_cols),
       names_to  = "condition",

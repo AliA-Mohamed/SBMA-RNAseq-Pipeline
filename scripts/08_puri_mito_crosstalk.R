@@ -262,7 +262,7 @@ key_gene_df <- tibble::tibble(gene_symbol = key_genes) %>%
       filter(!is.na(gene_symbol), gene_symbol != "") %>%
       arrange(padj) %>%
       distinct(gene_symbol, .keep_all = TRUE) %>%
-      select(gene_symbol, log2fc, pvalue, padj),
+      dplyr::select(gene_symbol, log2fc, pvalue, padj),
     by = "gene_symbol"
   ) %>%
   mutate(
