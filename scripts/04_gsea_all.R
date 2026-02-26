@@ -215,6 +215,48 @@ for (db in cfg$databases) {
   }
 }
 
+# ── 5b. Annotate artifact gene families in GSEA results ────────────────────
+cat("\n[5b/8] Annotating artifact gene families...\n")
+
+artifact_patterns <- c("^OR[0-9]", "^TAS[12]R", "^KRT[0-9]", "^KRTAP")
+artifact_regex <- paste(artifact_patterns, collapse = "|")
+
+for (db in names(gsea_results)) {
+  res <- gsea_results[[db]]
+  if (is.null(res)) next
+
+  res_df <- as.data.frame(res)
+  if (nrow(res_df) == 0) next
+
+  # GSEA uses core_enrichment column (slash-separated gene list)
+  gene_col <- if ("core_enrichment" %in% colnames(res_df)) "core_enrichment"
+              else if ("geneID" %in% colnames(res_df)) "geneID"
+              else next
+
+  res_df$artifact_gene_count <- sapply(res_df[[gene_col]], function(gid) {
+    genes <- unlist(strsplit(gid, "/"))
+    sum(grepl(artifact_regex, genes, ignore.case = FALSE))
+  })
+  res_df$artifact_gene_fraction <- round(
+    res_df$artifact_gene_count / sapply(res_df[[gene_col]], function(gid) {
+      length(unlist(strsplit(gid, "/")))
+    }), 3
+  )
+  res_df$artifact_flag <- ifelse(
+    res_df$artifact_gene_fraction >= 0.5,
+    "ARTIFACT_DOMINATED",
+    ifelse(res_df$artifact_gene_count > 0, "HAS_ARTIFACTS", "")
+  )
+
+  n_dominated <- sum(res_df$artifact_flag == "ARTIFACT_DOMINATED")
+  if (n_dominated > 0) {
+    cat(sprintf("       %s: %d artifact-dominated terms flagged\n", db, n_dominated))
+  }
+
+  # Store annotated df for saving later
+  attr(gsea_results[[db]], "annotated_df") <- res_df
+}
+
 # ── 6. Save results and generate plots ──────────────────────────────────────
 cat("\n[6/8] Saving results and generating plots...\n")
 
@@ -234,6 +276,14 @@ for (db in names(gsea_results)) {
 
   # -- Save RDS + CSV via save_enrichment --
   save_enrichment(res, tables_dir, rds_name, formats = plot_fmts)
+
+  # Overwrite CSV with artifact-annotated version if available
+  annotated_df <- attr(res, "annotated_df")
+  if (!is.null(annotated_df) && nrow(annotated_df) > 0) {
+    csv_path <- file.path(tables_dir, paste0(rds_name, ".csv"))
+    write.csv(annotated_df, csv_path, row.names = FALSE)
+  }
+
   cat(sprintf("       Saved: %s (.rds, .csv, dotplot)\n", rds_name))
 
   # -- Dotplot (top 20 by NES) --

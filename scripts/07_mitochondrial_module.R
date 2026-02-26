@@ -193,7 +193,70 @@ complex_stats <- oxphos_deg %>%
   ) %>%
   arrange(complex)
 
-# Step 11: Save complex stats
+# Step 10b: Permutation testing for complex-level mean LFC shifts
+# Validates whether observed mean LFC per complex is more extreme than
+# expected by randomly sampling gene sets of the same size from the genome.
+
+message("\n--- Permutation Testing for OXPHOS Complexes ---")
+
+n_perm <- 10000
+set.seed(cfg$enrichment$seed %||% 42)
+
+# All measured gene LFCs (genome-wide background for permutation)
+all_measured_lfc <- deg_all %>%
+  dplyr::filter(!is.na(log2fc)) %>%
+  dplyr::pull(log2fc)
+
+if (length(all_measured_lfc) > 100) {
+
+  perm_results <- complex_stats %>%
+    dplyr::rowwise() %>%
+    dplyr::mutate(
+      perm_p = {
+        obs_mean <- mean_lfc
+        n_genes  <- n_measured
+        # Sample n_genes from all measured LFCs, n_perm times
+        perm_means <- replicate(n_perm, mean(sample(all_measured_lfc, n_genes, replace = FALSE)))
+        # Two-sided empirical p-value
+        (sum(abs(perm_means) >= abs(obs_mean)) + 1) / (n_perm + 1)
+      }
+    ) %>%
+    dplyr::ungroup() %>%
+    dplyr::mutate(
+      perm_sig_star = dplyr::case_when(
+        perm_p < 0.001 ~ "***",
+        perm_p < 0.01  ~ "**",
+        perm_p < 0.05  ~ "*",
+        TRUE           ~ ""
+      )
+    )
+
+  # Add permutation results to complex_stats
+  complex_stats <- complex_stats %>%
+    dplyr::left_join(
+      perm_results %>% dplyr::select(complex, perm_p, perm_sig_star),
+      by = "complex"
+    )
+
+  message(sprintf("Permutation test (%d iterations) complete.", n_perm))
+  message(sprintf("  %-15s %10s %10s %10s %s",
+                  "Complex", "t-test P", "Perm P", "MeanLFC", "Perm Sig"))
+  message(paste(rep("-", 60), collapse = ""))
+  for (i in seq_len(nrow(complex_stats))) {
+    row <- complex_stats[i, ]
+    message(sprintf("  %-15s %10.4f %10.4f %10.3f %s",
+                    as.character(row$complex),
+                    row$ttest_p, row$perm_p,
+                    row$mean_lfc, row$perm_sig_star))
+  }
+
+} else {
+  message("Fewer than 100 measured genes in genome — skipping permutation test.")
+  complex_stats$perm_p <- NA_real_
+  complex_stats$perm_sig_star <- ""
+}
+
+# Step 11: Save complex stats (now includes permutation p-values)
 complex_stats_path <- file.path(tables_dir, "oxphos_complex_stats.csv")
 write.csv(complex_stats, complex_stats_path, row.names = FALSE)
 message(sprintf("Saved: %s", complex_stats_path))
@@ -528,18 +591,34 @@ message(sprintf("%-30s %d", "  Downregulated:",
 message(paste(rep("-", 55), collapse = ""))
 
 message("\nOXPHOS Complex Statistics:")
-message(sprintf("  %-15s %5s %5s %8s %8s %10s %s",
-                "Complex", "Meas", "Sig", "MeanLFC", "SEM", "t-test P", ""))
-message(paste(rep("-", 65), collapse = ""))
+has_perm <- "perm_p" %in% colnames(complex_stats) && !all(is.na(complex_stats$perm_p))
 
-for (i in seq_len(nrow(complex_stats))) {
-  row <- complex_stats[i, ]
-  message(sprintf("  %-15s %5d %5d %8.3f %8.3f %10.4f %s",
-                  as.character(row$complex),
-                  row$n_measured, row$n_sig,
-                  row$mean_lfc, row$sem,
-                  row$ttest_p,
-                  row$sig_star))
+if (has_perm) {
+  message(sprintf("  %-15s %5s %5s %8s %8s %10s %10s %s",
+                  "Complex", "Meas", "Sig", "MeanLFC", "SEM", "t-test P", "Perm P", ""))
+  message(paste(rep("-", 80), collapse = ""))
+  for (i in seq_len(nrow(complex_stats))) {
+    row <- complex_stats[i, ]
+    message(sprintf("  %-15s %5d %5d %8.3f %8.3f %10.4f %10.4f %s",
+                    as.character(row$complex),
+                    row$n_measured, row$n_sig,
+                    row$mean_lfc, row$sem,
+                    row$ttest_p, row$perm_p,
+                    row$perm_sig_star))
+  }
+} else {
+  message(sprintf("  %-15s %5s %5s %8s %8s %10s %s",
+                  "Complex", "Meas", "Sig", "MeanLFC", "SEM", "t-test P", ""))
+  message(paste(rep("-", 65), collapse = ""))
+  for (i in seq_len(nrow(complex_stats))) {
+    row <- complex_stats[i, ]
+    message(sprintf("  %-15s %5d %5d %8.3f %8.3f %10.4f %s",
+                    as.character(row$complex),
+                    row$n_measured, row$n_sig,
+                    row$mean_lfc, row$sem,
+                    row$ttest_p,
+                    row$sig_star))
+  }
 }
 
 message(paste(rep("-", 55), collapse = ""))
