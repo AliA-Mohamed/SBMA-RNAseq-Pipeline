@@ -192,6 +192,58 @@ for (db in cfg$databases) {
   }
 }
 
+# ---- Annotate artifact gene families in results ------------------------------
+
+message("\nAnnotating enrichment results for artifact gene families ...")
+
+# Known artifact gene families that frequently produce spurious enrichment
+# in non-relevant tissues due to large family size and low/zero expression
+artifact_patterns <- c(
+  "^OR[0-9]"    ,  # Olfactory receptors (~400 genes)
+  "^TAS[12]R"   ,  # Taste receptors
+  "^KRT[0-9]"   ,  # Keratins (in non-epithelial tissues)
+  "^KRTAP"         # Keratin-associated proteins
+)
+artifact_regex <- paste(artifact_patterns, collapse = "|")
+
+for (name in names(all_results)) {
+  res <- all_results[[name]]
+  if (is.null(res)) next
+
+  res_df <- as.data.frame(res)
+  if (nrow(res_df) == 0 || !"geneID" %in% colnames(res_df)) next
+
+  # For each term, count how many genes match artifact families
+  res_df$artifact_gene_count <- sapply(res_df$geneID, function(gid) {
+    genes <- unlist(strsplit(gid, "/"))
+    sum(grepl(artifact_regex, genes, ignore.case = FALSE))
+  })
+  res_df$artifact_gene_fraction <- round(
+    res_df$artifact_gene_count / sapply(res_df$geneID, function(gid) {
+      length(unlist(strsplit(gid, "/")))
+    }), 3
+  )
+  res_df$artifact_flag <- ifelse(
+    res_df$artifact_gene_fraction >= 0.5,
+    "ARTIFACT_DOMINATED",
+    ifelse(res_df$artifact_gene_count > 0, "HAS_ARTIFACTS", "")
+  )
+
+  # Count flagged terms
+  n_dominated <- sum(res_df$artifact_flag == "ARTIFACT_DOMINATED")
+  n_has       <- sum(res_df$artifact_flag == "HAS_ARTIFACTS")
+  if (n_dominated > 0 || n_has > 0) {
+    message(sprintf("  %s: %d artifact-dominated, %d with some artifacts (of %d terms)",
+                    name, n_dominated, n_has, nrow(res_df)))
+  }
+
+  # Re-save CSV with artifact annotations
+  csv_path <- file.path(tables_dir, paste0(name, ".csv"))
+  if (file.exists(csv_path)) {
+    write.csv(res_df, csv_path, row.names = FALSE)
+  }
+}
+
 # ---- Combined barplots per database ------------------------------------------
 
 message("Generating combined UP/DOWN barplots per database ...")

@@ -128,6 +128,36 @@ if (n_input_genes > 5000 && !isTRUE(contrast_cfg$full_ranked)) {
   cat("       Consider setting full_ranked=TRUE to enable GSEA.\n")
 }
 
+# ── 5c. Low-expression gene filtering ────────────────────────────────────────
+min_expr <- cfg$thresholds$min_mean_expression
+if (is.null(min_expr)) min_expr <- 0
+
+if (min_expr > 0 && isTRUE(contrast_cfg$full_ranked)) {
+  cat(sprintf("\n[5c/9] Filtering low-expression genes (min_mean_expression = %g)...\n",
+              min_expr))
+
+  # Check if there is an expression column; if not, use absolute log2fc as proxy
+  # For TPM/count-based data, contrasts may provide an optional 'mean_expression'
+  # column. Otherwise, we filter genes where both conditions likely have near-zero
+  # expression, indicated by very small absolute log2fc AND non-significant p-values
+  # in the context of near-zero expression.
+  #
+  # If a mean_expression column was provided in the DEG file, use it directly.
+  if ("mean_expression" %in% colnames(deg_df)) {
+    n_before <- nrow(deg_df)
+    deg_df <- deg_df %>% dplyr::filter(mean_expression >= min_expr)
+    n_removed <- n_before - nrow(deg_df)
+    cat(sprintf("       Removed %d genes with mean_expression < %g (%d remaining)\n",
+                n_removed, min_expr, nrow(deg_df)))
+  } else {
+    cat("       No 'mean_expression' column found in DEG file — skipping filter.\n")
+    cat("       To enable: add a mean_expression column to your DEG file, or\n")
+    cat("       use Step 00 (DESeq2) which computes it automatically.\n")
+  }
+} else if (min_expr > 0 && !isTRUE(contrast_cfg$full_ranked)) {
+  cat("\n[5c/9] Low-expression filter skipped (only applies to full_ranked data).\n")
+}
+
 # ── 6. Classify DEGs ─────────────────────────────────────────────────────────
 cat("\n[6/9] Classifying DEGs...\n")
 lfc_thresh  <- cfg$thresholds$lfc

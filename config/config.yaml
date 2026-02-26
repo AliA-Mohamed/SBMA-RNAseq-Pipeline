@@ -12,6 +12,9 @@ reactome_organism: "human"
 thresholds:
   lfc: 1.0
   padj: 0.05
+  min_mean_expression: 0    # Filter genes with mean expression below this value
+                            # (applies to full_ranked data only). Set to 0 to disable.
+                            # Recommended: 1.0 for TPM data, 10 for raw counts.
 
 enrichment:
   pvalue_cutoff: 0.05
